@@ -18,7 +18,7 @@
 <!--            android:value="${apiKey}"/>-->
 
         <activity
-            android:name="com.devpass.spaceapp.presentation.launchList.LaunchListActivity"
+            android:name="com.devpass.spaceapp.launchList.presentation.LaunchListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

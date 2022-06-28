@@ -1,4 +1,4 @@
-package com.devpass.spaceapp.presentation.launchList
+package com.devpass.spaceapp.launchList.data
 
 import androidx.recyclerview.widget.DiffUtil
 

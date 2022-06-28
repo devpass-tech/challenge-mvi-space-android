@@ -1,8 +1,9 @@
-package com.devpass.spaceapp.presentation.launchList
+package com.devpass.spaceapp.launchList.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devpass.spaceapp.R
+import com.devpass.spaceapp.launchList.data.LaunchModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
