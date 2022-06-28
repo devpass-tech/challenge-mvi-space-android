@@ -1,15 +1,23 @@
 package com.devpass.spaceapp.presentation.launchList
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devpass.spaceapp.databinding.ActivityLaunchListBinding
 import com.devpass.spaceapp.R
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class LaunchListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLaunchListBinding
 
     private lateinit var adapter: LaunchListAdapter
+    private val viewModel: LaunchListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,24 +25,47 @@ class LaunchListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecycleView()
-        initLaunchList()
+        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
+        prepareObservers()
     }
 
-    private fun initLaunchList() {
+    private fun prepareObservers() {
+        lifecycleScope.launch {
+            viewModel.viewState.collect { uiState ->
+                when(uiState) {
+                    is LaunchListViewModel.LaunchListViewState.ShowLoading -> showLoading()
+                    is LaunchListViewModel.LaunchListViewState.HideLoading -> hideLoading()
+                    is LaunchListViewModel.LaunchListViewState.LaunchList -> initLaunchList(uiState.list)
+                    is LaunchListViewModel.LaunchListViewState.ItemClicked -> onItemClicked(uiState.itemClicked)
+                }
+            }
+        }
+    }
 
-        val launch1 = LaunchModel("Launch 1","1", "July 03, 2020", "Success", R.drawable.crs)
-        val launch2 = LaunchModel("Launch 2","2", "July 03, 2020", "Success", R.drawable.falcon_sat)
-        val launch3 = LaunchModel("Launch 3","3", "July 03, 2020", "Success", R.drawable.starlink)
-        val launch4 = LaunchModel("Launch 4","4", "July 03, 2020", "Success", R.drawable.spacex_dragon_crs20_patch01)
-        val launch5 = LaunchModel("Launch 5","5", "July 03, 2020", "Success", R.drawable.starlink)
+    private fun showLoading() {
+        binding.pbLaunches.visibility = View.VISIBLE
+    }
 
-        var launchList: List<LaunchModel> = listOf(launch1, launch2, launch3, launch4, launch5)
+    private fun hideLoading() {
+        binding.pbLaunches.visibility = View.GONE
+    }
+
+    private fun initLaunchList(launchList: List<LaunchModel>) {
+        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
         adapter.submitList(launchList)
     }
 
     private fun setupRecycleView() {
-        adapter = LaunchListAdapter()
+        adapter = LaunchListAdapter(::intentItemClick)
         binding.rvLaunches.adapter = adapter
         binding.rvLaunches.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun intentItemClick(listItem: LaunchModel) {
+        viewModel.event(LaunchListViewModel.LaunchListEvent.OnItemClicked(itemClicked = listItem))
+    }
+
+    private fun onItemClicked(itemList: LaunchModel) {
+        Toast.makeText(this, "Clicou em ${itemList.name}", Toast.LENGTH_LONG).show()
     }
 }
