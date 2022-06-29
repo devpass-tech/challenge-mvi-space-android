@@ -3,20 +3,36 @@ package com.devpass.spaceapp.presentation.launchList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devpass.spaceapp.R
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+@FlowPreview
 class LaunchListViewModel: ViewModel() {
 
     private val _viewState = MutableStateFlow<LaunchListViewState>(LaunchListViewState.ShowLoading)
-    val viewState: StateFlow<LaunchListViewState> = _viewState
+    private val viewEvent = MutableSharedFlow<LaunchListEvent>()
+
+    val viewState: Flow<LaunchListViewState> =
+        viewEvent
+            .flatMapMerge {
+                when(it){
+                    is LaunchListEvent.FetchLaunchList -> {
+                        //Chamar repository e receber uma action
+                        flow<LaunchListViewState> { emit(LaunchListViewState.ShowLoading) }
+                    }
+                    else -> TODO()
+                }
+            }
+            .map {
+                //Chamar Store passando a Action e recebendo um novo estado
+                it
+            }
 
     fun event(launchListEvent: LaunchListEvent) {
-        when(launchListEvent) {
-            is LaunchListEvent.FetchLaunchList -> fetchLaunchList()
-            is LaunchListEvent.OnItemClicked -> handleItemClicked(launchListEvent.itemClicked)
+        viewModelScope.launch {
+            viewEvent.emit(launchListEvent)
         }
     }
 
