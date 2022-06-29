@@ -1,15 +1,14 @@
-package com.devpass.spaceapp.presentation.launchList
+package com.devpass.spaceapp.launchList.presentation
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devpass.spaceapp.databinding.ActivityLaunchListBinding
-import com.devpass.spaceapp.R
+import com.devpass.spaceapp.launchList.data.LaunchModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

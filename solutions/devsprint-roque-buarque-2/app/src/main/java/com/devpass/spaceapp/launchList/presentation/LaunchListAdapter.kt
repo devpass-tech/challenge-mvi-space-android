@@ -1,10 +1,11 @@
-package com.devpass.spaceapp.presentation.launchList
+package com.devpass.spaceapp.launchList.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.devpass.spaceapp.databinding.ListItemBinding
+import com.devpass.spaceapp.launchList.data.LaunchModel
 
 class LaunchListAdapter(
     private val onItemClick: (listItem: LaunchModel) -> Unit = {}
