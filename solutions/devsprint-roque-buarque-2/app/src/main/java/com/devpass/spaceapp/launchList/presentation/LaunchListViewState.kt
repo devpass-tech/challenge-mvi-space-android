@@ -4,11 +4,11 @@ import com.devpass.spaceapp.launchList.data.LaunchModel
 
 data class LaunchListViewState (
     val launchList: List<LaunchModel>,
-    val syncState: LaunchListSyncState
+    val syncState: LaunchListScreenState
 )
 
-sealed class LaunchListSyncState {
-    object Loading: LaunchListSyncState()
-    object Content: LaunchListSyncState()
-    data class Message(val msg: String) : LaunchListSyncState()
+sealed class LaunchListScreenState {
+    object Loading: LaunchListScreenState()
+    data class DisplayLaunchList (val launchList: List<LaunchModel>) : LaunchListScreenState()
+    data class Message(val msg: String) : LaunchListScreenState()
 }
