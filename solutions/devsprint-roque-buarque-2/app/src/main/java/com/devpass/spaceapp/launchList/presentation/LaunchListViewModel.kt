@@ -17,37 +17,23 @@ import kotlinx.coroutines.launch
 
 @FlowPreview
 class LaunchListViewModel(
-    private val repository: LaunchListRepository
+    private val repository: LaunchListRepository,
+    private val store: LaunchListStore
 ) : ViewModel() {
 
     private val viewEvent = MutableSharedFlow<LaunchListEvent>()
 
     val viewState: Flow<LaunchListScreenState> =
         viewEvent
-            .onEach {
-                println("Aqui $it")
-            }
             .flatMapMerge {
                 when (it) {
                     is LaunchListEvent.FetchLaunchList -> {
-                        //Chamar repository e receber uma action
                         repository.fetchLaunchList()
                     }
-                    else -> TODO()
                 }
             }
-            .onEach {
-                println("Aqui $it")
-            }
-            .scan(LaunchListViewState()) { state, action ->
-                //Chamar Store passando a Action e recebendo um novo estado
-                LaunchListReducer.invoke(action, state)
-            }
             .map {
-                it.screenState
-            }
-            .onEach {
-                println("Aqui $it")
+                store.invoke(it)
             }
 
     fun event(launchListEvent: LaunchListEvent) {
@@ -76,6 +62,7 @@ class LaunchListViewModel(
             return if (modelClass.isAssignableFrom(LaunchListViewModel::class.java)) {
                 LaunchListViewModel(
                     repository = LaunchListRepositoryImpl(),
+                    store = LaunchListStore(LaunchListReducer)
                 ) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")

@@ -26,8 +26,8 @@ class LaunchListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecycleView()
-        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
         prepareObservers()
+        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
     }
 
     private fun prepareObservers() {
@@ -52,7 +52,6 @@ class LaunchListActivity : AppCompatActivity() {
 
     private fun initLaunchList(launchList: List<LaunchModel>) {
         hideLoading()
-        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
         adapter.submitList(launchList)
     }
 
