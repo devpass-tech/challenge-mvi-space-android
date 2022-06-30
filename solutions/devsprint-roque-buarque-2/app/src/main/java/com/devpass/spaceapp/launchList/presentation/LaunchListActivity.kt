@@ -9,14 +9,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devpass.spaceapp.databinding.ActivityLaunchListBinding
 import com.devpass.spaceapp.launchList.data.LaunchModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@FlowPreview
 class LaunchListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLaunchListBinding
 
     private lateinit var adapter: LaunchListAdapter
-    private val viewModel: LaunchListViewModel by viewModels()
+    private val viewModel: LaunchListViewModel by lazy { LaunchListViewModel.newInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +34,9 @@ class LaunchListActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.viewState.collect { uiState ->
                 when(uiState) {
-                    is LaunchListViewModel.LaunchListViewState.ShowLoading -> showLoading()
-                    is LaunchListViewModel.LaunchListViewState.HideLoading -> hideLoading()
-                    is LaunchListViewModel.LaunchListViewState.LaunchList -> initLaunchList(uiState.list)
-                    is LaunchListViewModel.LaunchListViewState.ItemClicked -> onItemClicked(uiState.itemClicked)
+                    is LaunchListScreenState.Loading -> showLoading()
+                    is LaunchListScreenState.DisplayLaunchList-> initLaunchList(uiState.launchList)
+                    is LaunchListScreenState.Message -> print(uiState.msg)
                 }
             }
         }
@@ -50,6 +51,7 @@ class LaunchListActivity : AppCompatActivity() {
     }
 
     private fun initLaunchList(launchList: List<LaunchModel>) {
+        hideLoading()
         viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
         adapter.submitList(launchList)
     }
@@ -61,7 +63,7 @@ class LaunchListActivity : AppCompatActivity() {
     }
 
     private fun intentItemClick(listItem: LaunchModel) {
-        viewModel.event(LaunchListViewModel.LaunchListEvent.OnItemClicked(itemClicked = listItem))
+
     }
 
     private fun onItemClicked(itemList: LaunchModel) {
