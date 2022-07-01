@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface LaunchListRepository {
 
-    fun fetchLaunchList() : Flow<LaunchListAction>
+    suspend fun fetchLaunchList() : Flow<LaunchListAction>
 }

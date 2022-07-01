@@ -2,20 +2,25 @@ package com.devpass.spaceapp.launchList.data
 
 import com.devpass.spaceapp.R
 import com.devpass.spaceapp.data.api.SpaceXAPIService
+import com.devpass.spaceapp.launchList.data.model.Launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
 class LaunchListRepositoryImpl (
-    private val service: SpaceXAPIService
+    private val service: SpaceXAPIService = Network.createSpaceXService()
 ) : LaunchListRepository {
 
-    override fun fetchLaunchList(): Flow<LaunchListAction> {
+    override suspend fun fetchLaunchList(): Flow<LaunchListAction> {
         return flow<LaunchListAction> {
-            // TODO service network request
-            val list = launchList
-            emit(LaunchListAction.Success(list))
+            //val list = launchList
+            val list = service.fetchNextLaunches().map {
+                it.toLaunchModel()
+            }
+            emit(LaunchListAction.Success(
+                launchList = list
+            ))
         }
             .catch { error -> emit(LaunchListAction.Error(error)) }
             .onStart { emit(LaunchListAction.Executing) }
@@ -30,3 +35,12 @@ class LaunchListRepositoryImpl (
         val launchList = listOf(launch1, launch2, launch3, launch4, launch5)
     }
 }
+
+fun Launch.toLaunchModel(): LaunchModel =
+    LaunchModel(
+        name = name,
+        number = stages.toString(),
+        date = firstFlight,
+        status = successRatePct.toString(),
+        R.drawable.falcon_sat
+    )

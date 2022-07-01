@@ -50,7 +50,6 @@ class LaunchListActivity : AppCompatActivity() {
     }
 
     private fun initLaunchList(launchList: List<LaunchModel>) {
-        viewModel.event(LaunchListViewModel.LaunchListEvent.FetchLaunchList)
         adapter.submitList(launchList)
     }
 
