@@ -5,6 +5,6 @@ import retrofit2.http.POST
 
 interface SpaceXAPIService {
 
-    @POST("/launches/query")
+    @POST("launches/query")
     suspend fun fetchNextLaunches(): List<Launch>
 }

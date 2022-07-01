@@ -23,4 +23,4 @@ data class Engines(@SerializedName("layout")
                    @SerializedName("version")
                    val version: String = "",
                    @SerializedName("propellant_2")
-                   val propellant: String = "")
+                   val propellant2: String = "")
