@@ -7,9 +7,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
-class LaunchListRepositoryImpl (
-    private val service: SpaceXAPIService
-) : LaunchListRepository {
+class LaunchListRepositoryImpl () : LaunchListRepository {
 
     override fun fetchLaunchList(): Flow<LaunchListAction> {
         return flow<LaunchListAction> {
