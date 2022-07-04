@@ -1,60 +1,70 @@
 package com.devpass.spaceapp.launchList.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewModelScope
-import com.devpass.spaceapp.R
-import com.devpass.spaceapp.launchList.data.LaunchModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.devpass.spaceapp.launchList.data.LaunchListRepository
+import com.devpass.spaceapp.launchList.data.LaunchListRepositoryImpl
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class LaunchListViewModel: ViewModel() {
+@FlowPreview
+class LaunchListViewModel(
+    private val repository: LaunchListRepository,
+    private val store: LaunchListStore
+) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<LaunchListViewState>(LaunchListViewState.ShowLoading)
-    val viewState: StateFlow<LaunchListViewState> = _viewState
+    private val viewEvent = MutableSharedFlow<LaunchListEvent>()
+
+    val viewState: Flow<LaunchListScreenState> =
+        viewEvent
+            .flatMapMerge {
+                when (it) {
+                    is LaunchListEvent.FetchLaunchList -> {
+                        repository.fetchLaunchList()
+                    }
+                }
+            }
+            .map {
+                store.invoke(it)
+            }
 
     fun event(launchListEvent: LaunchListEvent) {
-        when(launchListEvent) {
-            is LaunchListEvent.FetchLaunchList -> fetchLaunchList()
-            is LaunchListEvent.OnItemClicked -> handleItemClicked(launchListEvent.itemClicked)
-        }
-    }
-
-    private fun handleItemClicked(itemClicked: LaunchModel) {
-        //TODO Navigation to details
-        _viewState.value = LaunchListViewState.ItemClicked(
-            itemClicked = itemClicked
-        )
-    }
-
-    private fun fetchLaunchList() {
-        val launch1 = LaunchModel("Launch 1","1", "July 03, 2020", "Success", R.drawable.crs)
-        val launch2 = LaunchModel("Launch 2","2", "July 03, 2020", "Success", R.drawable.falcon_sat)
-        val launch3 = LaunchModel("Launch 3","3", "July 03, 2020", "Success", R.drawable.starlink)
-        val launch4 = LaunchModel("Launch 4","4", "July 03, 2020", "Success", R.drawable.spacex_dragon_crs20_patch01)
-        val launch5 = LaunchModel("Launch 5","5", "July 03, 2020", "Success", R.drawable.starlink)
-        val launchList = listOf(launch1, launch2, launch3, launch4, launch5)
-
         viewModelScope.launch {
-            _viewState.value = LaunchListViewState.ShowLoading
-            delay(2000)
-            _viewState.value = LaunchListViewState.LaunchList(
-                list = launchList
-            )
-            _viewState.value = LaunchListViewState.HideLoading
+            viewEvent.emit(launchListEvent)
         }
     }
 
     sealed class LaunchListEvent {
-        object FetchLaunchList: LaunchListEvent()
-        data class OnItemClicked(val itemClicked: LaunchModel): LaunchListEvent()
+        object FetchLaunchList : LaunchListEvent()
     }
 
-    sealed class LaunchListViewState {
-        object ShowLoading: LaunchListViewState()
-        object HideLoading: LaunchListViewState()
-        data class LaunchList(val list: List<LaunchModel>): LaunchListViewState()
-        data class ItemClicked(val itemClicked: LaunchModel): LaunchListViewState()
+    companion object {
+
+        fun newInstance(owner: ViewModelStoreOwner): LaunchListViewModel {
+            return ViewModelProvider(
+                owner,
+                LaunchListViewModelFactory()
+            )[LaunchListViewModel::class.java]
+        }
+    }
+
+    class LaunchListViewModelFactory : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return if (modelClass.isAssignableFrom(LaunchListViewModel::class.java)) {
+                LaunchListViewModel(
+                    repository = LaunchListRepositoryImpl(),
+                    store = LaunchListStore(LaunchListReducer)
+                ) as T
+            } else {
+                throw IllegalArgumentException("ViewModel Not Found")
+            }
+        }
     }
 }

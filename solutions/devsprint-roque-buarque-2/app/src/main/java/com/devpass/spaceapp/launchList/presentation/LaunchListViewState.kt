@@ -4,7 +4,7 @@ import com.devpass.spaceapp.launchList.data.LaunchModel
 
 data class LaunchListViewState (
     val launchList: List<LaunchModel> = emptyList(),
-    val screenState: LaunchListScreenState
+    val screenState: LaunchListScreenState = LaunchListScreenState.Loading
 )
 
 sealed class LaunchListScreenState {

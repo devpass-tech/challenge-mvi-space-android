@@ -2,47 +2,23 @@ package com.devpass.spaceapp.launchList.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Launch(@SerializedName("second_stage")
-                  val secondStage: SecondStage,
-                  @SerializedName("country")
-                  val country: String = "",
-                  @SerializedName("mass")
-                  val mass: Mass,
-                  @SerializedName("active")
-                  val active: Boolean = false,
-                  @SerializedName("cost_per_launch")
-                  val costPerLaunch: Int = 0,
-                  @SerializedName("description")
-                  val description: String = "",
-                  @SerializedName("type")
-                  val type: String = "",
-                  @SerializedName("payload_weights")
-                  val payloadWeights: List<PayloadWeightsItem>?,
-                  @SerializedName("first_flight")
-                  val firstFlight: String = "",
-                  @SerializedName("landing_legs")
-                  val landingLegs: LandingLegs,
-                  @SerializedName("diameter")
-                  val diameter: Diameter,
-                  @SerializedName("flickr_images")
-                  val flickrImages: List<String>?,
-                  @SerializedName("first_stage")
-                  val firstStage: FirstStage,
-                  @SerializedName("engines")
-                  val engines: Engines,
-                  @SerializedName("name")
-                  val name: String = "",
-                  @SerializedName("stages")
-                  val stages: Int = 0,
-                  @SerializedName("boosters")
-                  val boosters: Int = 0,
-                  @SerializedName("company")
-                  val company: String = "",
-                  @SerializedName("success_rate_pct")
-                  val successRatePct: Int = 0,
-                  @SerializedName("wikipedia")
-                  val wikipedia: String = "",
-                  @SerializedName("id")
-                  val id: String = "",
-                  @SerializedName("height")
-                  val height: Height)
+data class Launch(@SerializedName("hasPrevPage")
+                  val hasPrevPage: Boolean = false,
+                  @SerializedName("docs")
+                  val docs: List<DocsItem>?,
+                  @SerializedName("hasNextPage")
+                  val hasNextPage: Boolean = false,
+                  @SerializedName("pagingCounter")
+                  val pagingCounter: Int = 0,
+                  @SerializedName("nextPage")
+                  val nextPage: Int = 0,
+                  @SerializedName("limit")
+                  val limit: Int = 0,
+                  @SerializedName("totalPages")
+                  val totalPages: Int = 0,
+                  @SerializedName("prevPage")
+                  val prevPage: Int = 0,
+                  @SerializedName("page")
+                  val page: Int = 0,
+                  @SerializedName("totalDocs")
+                  val totalDocs: Int = 0)
