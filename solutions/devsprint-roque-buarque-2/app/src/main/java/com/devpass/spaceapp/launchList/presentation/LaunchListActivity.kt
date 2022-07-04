@@ -1,5 +1,6 @@
 package com.devpass.spaceapp.launchList.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devpass.spaceapp.databinding.ActivityLaunchListBinding
 import com.devpass.spaceapp.launchList.data.LaunchModel
+import com.devpass.spaceapp.presentation.launch.LaunchActivity
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -62,10 +64,8 @@ class LaunchListActivity : AppCompatActivity() {
     }
 
     private fun intentItemClick(listItem: LaunchModel) {
-
-    }
-
-    private fun onItemClicked(itemList: LaunchModel) {
-        Toast.makeText(this, "Clicou em ${itemList.name}", Toast.LENGTH_LONG).show()
+        val intent = Intent(this, LaunchActivity::class.java)
+        intent.putExtra("LAUNCH", listItem)
+        startActivity(intent)
     }
 }
