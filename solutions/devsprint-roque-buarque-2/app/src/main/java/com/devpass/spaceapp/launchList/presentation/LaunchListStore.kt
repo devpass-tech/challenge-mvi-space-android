@@ -6,7 +6,7 @@ class LaunchListStore(
     private val reducer: LaunchListReducer
 ) {
 
-    private var state = LaunchListViewState(emptyList(), LaunchListScreenState.Loading)
+    private var state = LaunchListViewState()
 
     operator fun invoke(action: LaunchListAction): LaunchListScreenState {
         state = reducer(action, state)

@@ -1,18 +1,16 @@
 package com.devpass.spaceapp.launchList.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewModelScope
-import com.devpass.spaceapp.R
 import com.devpass.spaceapp.launchList.data.LaunchListRepository
 import com.devpass.spaceapp.launchList.data.LaunchListRepositoryImpl
-import com.devpass.spaceapp.repository.FetchLaunchesRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @FlowPreview

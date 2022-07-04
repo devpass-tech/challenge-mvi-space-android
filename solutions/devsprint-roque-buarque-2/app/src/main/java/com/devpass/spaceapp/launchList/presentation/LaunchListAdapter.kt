@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.devpass.spaceapp.databinding.ListItemBinding
 import com.devpass.spaceapp.launchList.data.LaunchModel
 
@@ -29,7 +30,7 @@ class LaunchViewHolder(binding: ListItemBinding) : RecyclerView.ViewHolder(bindi
     private val content = binding.listItemContent
 
     fun bind(model: LaunchModel, onItemClick: (listItem: LaunchModel) -> Unit) {
-        imageLaunch.setImageResource(model.image)
+        imageLaunch.load(model.image)
         numberLaunch.text = model.number
         nameLaunch.text = model.name
         dateLaunch.text = model.date
