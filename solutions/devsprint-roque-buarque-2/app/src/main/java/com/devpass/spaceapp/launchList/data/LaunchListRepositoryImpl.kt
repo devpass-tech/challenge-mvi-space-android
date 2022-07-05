@@ -1,6 +1,5 @@
 package com.devpass.spaceapp.launchList.data
 
-import com.devpass.spaceapp.R
 import com.devpass.spaceapp.data.api.SpaceXAPIService
 import com.devpass.spaceapp.launchList.data.model.DocsItem
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
 class LaunchListRepositoryImpl(
-    private val service: SpaceXAPIService = Network.createSpaceXService()
+    private val service: SpaceXAPIService = Network.createService()
 ) : LaunchListRepository {
 
     override suspend fun fetchLaunchList(): Flow<LaunchListAction> {
