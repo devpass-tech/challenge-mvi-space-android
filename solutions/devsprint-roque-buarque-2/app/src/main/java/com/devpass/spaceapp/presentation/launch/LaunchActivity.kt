@@ -26,7 +26,7 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
-        val fragments = listOf(FragmentDetails(), RocketFragment(), FragmentLaunchpad())
+        val fragments = listOf(FragmentDetails(), RocketFragment(), FragmentLaunchpad.newInstance(launchItem!!.id))
         val fragmentsPageTitle = listOf("Details", "Rocket", "Launchpad")
         val viewPagerAdapter = ViewPagerAdapter(
             fragments = fragments,

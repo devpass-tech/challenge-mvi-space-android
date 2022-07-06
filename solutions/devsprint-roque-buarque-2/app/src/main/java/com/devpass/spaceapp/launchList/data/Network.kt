@@ -19,7 +19,7 @@ object Network {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://api.spacexdata.com/v5/")
+            .baseUrl("https://api.spacexdata.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
